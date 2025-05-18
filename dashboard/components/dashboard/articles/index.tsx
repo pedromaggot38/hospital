@@ -19,9 +19,9 @@ async function getData(): Promise<Articles[]> {
                 select: {
                     name: true,
                     username: true,
+                    email: true,
                     role: true,
                     image: true,
-                    createdAt: true,
                 },
             },
         },
@@ -45,8 +45,8 @@ async function getData(): Promise<Articles[]> {
             name: article.createdByUser.name ?? "",
             username: article.createdByUser.username,
             role: article.createdByUser.role,
+            email: article.createdByUser.email,
             image: article.createdByUser.image ?? "",
-            createdAt: article.createdByUser.createdAt,
         },
     }));
 

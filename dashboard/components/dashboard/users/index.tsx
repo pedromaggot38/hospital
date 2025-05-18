@@ -1,4 +1,3 @@
-
 import db from "@/lib/db";
 import { DataTable } from "./data-table"
 import { User } from "@/lib/types/all";

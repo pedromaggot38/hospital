@@ -38,6 +38,7 @@ export type Article = {
   createdByUser: {
     name: string;
     username: string;
+    email: string;
     role: string;
     image?: string;
     createdAt: Date;

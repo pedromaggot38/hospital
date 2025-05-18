@@ -39,9 +39,10 @@ export const articleSchema = z.object({
   slug: z.string(),
   status: z.enum(['published', 'draft', 'archived']),
   content: z.string().optional(),
-  user: z.object({
+  createdBy: z.object({
     name: z.string().optional(),
     username: z.string(),
+    email: z.string().email().optional(),
     role: z.enum(['root', 'admin', 'journalist']),
     image: z.string().optional(),
     createdAt: z.date(),
