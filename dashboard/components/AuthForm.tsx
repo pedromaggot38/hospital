@@ -90,7 +90,6 @@ const AuthForm = ({ type, defaultValues, className }: AuthFormProps) => {
                 } else {
                     toast.error(result?.error ?? 'Erro ao fazer login.');
                 }
-
                 return result;
             }
 
@@ -120,7 +119,6 @@ const AuthForm = ({ type, defaultValues, className }: AuthFormProps) => {
             return { success: false, error: 'Falha ao enviar formulário' };
         }
     };
-
 
     const title = type === 'SIGN_IN' ? 'Bem-vindo de volta' : 'Crie sua conta'
     const description = type === 'SIGN_IN'

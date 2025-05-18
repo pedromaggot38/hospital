@@ -1,16 +1,44 @@
 'use server';
 
-import { hash } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
 import { signIn } from '@/lib/auth';
-import { AuthCredentials } from '@/types';
+import { AuthCredentials } from '@/types/auth';
 import db from '../db';
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, 'username' | 'password'>
 ) => {
   const { username, password } = params;
+
   try {
+    const user = await db.user.findUnique({
+      where: { username },
+    });
+
+    if (!user) {
+      return {
+        success: false,
+        error: 'Usuário não encontrado.',
+      };
+    }
+
+    const isPasswordValid = await compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return {
+        success: false,
+        error: 'Usuário ou senha inválidos.',
+      };
+    }
+
+    if (!user.active) {
+      return {
+        success: false,
+        error: 'Usuário desativado. Contate o administrador.',
+      };
+    }
+
     const result = await signIn('credentials', {
       username,
       password,
@@ -18,12 +46,13 @@ export const signInWithCredentials = async (
     });
 
     if (result?.error) {
-      return { success: false, error: result.error };
+      return { success: false, error: 'Usuário ou senha inválidos.' };
     }
 
     return { success: true };
   } catch (error) {
-    console.log('Sign in error: ', error);
+    console.error('Erro inesperado no login:', error);
+    return { success: false, error: 'Erro inesperado ao fazer login.' };
   }
 };
 
