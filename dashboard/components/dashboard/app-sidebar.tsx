@@ -5,6 +5,7 @@ import {
     Command,
     HeartPulse,
     HelpCircle,
+    Home,
     Newspaper,
     Settings,
     Users,
@@ -32,18 +33,23 @@ const data = {
     },
     navMain: [
         {
+            title: "Dashboard",
+            url: "/dashboard",
+            icon: Home,
+        },
+        {
             title: "Usuários",
-            url: "#",
+            url: "/dashboard/users",
             icon: Users,
         },
         {
             title: "Notícias",
-            url: "#",
+            url: "/dashboard/articles",
             icon: Newspaper,
         },
         {
             title: "Médicos",
-            url: "#",
+            url: "/dashboard/doctors",
             icon: HeartPulse,
         },
     ],

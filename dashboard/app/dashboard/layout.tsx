@@ -1,14 +1,14 @@
-import { AppSidebar } from '@/components/side-bar-dashboard/app-sidebar'
+import { AppSidebar } from '@/components/dashboard/app-sidebar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { auth } from '@/lib/auth'
 import db from '@/lib/db'
+import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
 
 const Layout = async ({ children }: { children: ReactNode }) => {
     const session = await auth()
-
     if (!session || !session.user?.id) {
-        return null
+        redirect('/')
     }
 
     const user = await db.user.findUnique({
@@ -30,11 +30,11 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     return (
         <SidebarProvider>
             <AppSidebar user={user} />
-            <div>
+            <div className='m-2'>
                 <SidebarTrigger />
                 {children}
             </div>
-        </SidebarProvider>
+        </SidebarProvider >
     )
 }
 
