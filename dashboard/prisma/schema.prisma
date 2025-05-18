@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  root
+  admin
+  journalist
+}
+
+enum ArticleStatus {
+  published
+  draft
+  archived
+}
+
+enum WeekDay {
+  segunda
+  terca
+  quarta
+  quinta
+  sexta
+  sabado
+  domingo
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  username             String    @unique
+  password             String
+  name                 String
+  email                String    @unique
+  phone                String?   @unique
+  image                String?
+  role                 UserRole  @default(journalist)
+  active               Boolean   @default(true)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  passwordChangedAt    DateTime?
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+
+  createdArticles Article[] @relation("CreatedArticles")
+  updatedArticles Article[] @relation("UpdatedArticles")
+
+  createdDoctors Doctor[] @relation("CreatedDoctors")
+  updatedDoctors Doctor[] @relation("UpdatedDoctors")
+
+  @@index([id, username])
+  @@map("user")
+}
+
+model Article {
+  id               Int           @id @default(autoincrement())
+  title            String
+  subtitle         String?
+  content          String?       @db.Text
+  slug             String        @unique
+  author           String
+  imageUrl         String?
+  imageDescription String?
+  status           ArticleStatus @default(draft)
+  lastModifiedBy   String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  createdBy String
+  updatedBy String?
+
+  createdByUser User  @relation("CreatedArticles", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User? @relation("UpdatedArticles", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@index([slug, createdAt])
+  @@map("article")
+}
+
+model Doctor {
+  id        Int        @id @default(autoincrement())
+  name      String
+  specialty String
+  state     String
+  crm       String
+  phone     String?    @unique
+  email     String?    @unique
+  visible   Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  schedules Schedule[]
+
+  createdBy String
+  updatedBy String?
+
+  createdByUser User  @relation("CreatedDoctors", fields: [createdBy], references: [id], onDelete: Restrict)
+  updatedByUser User? @relation("UpdatedDoctors", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@unique([crm, state])
+  @@index([crm, name])
+  @@map("doctor")
+}
+
+model Schedule {
+  id        Int     @id @default(autoincrement())
+  dayOfWeek WeekDay
+  startTime String // Hora no formato "HH:mm"
+  endTime   String // Hora no formato "HH:mm"
+  doctor    Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  doctorId  Int
+
+  @@unique([doctorId, dayOfWeek])
+  @@index([doctorId, dayOfWeek])
+  @@map("schedule")
+}
