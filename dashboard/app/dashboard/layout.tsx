@@ -1,4 +1,5 @@
 import { AppSidebar } from '@/components/dashboard/app-sidebar'
+import { SiteHeader } from '@/components/dashboard/site-header'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { auth } from '@/lib/auth'
 import db from '@/lib/db'
@@ -30,9 +31,11 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     return (
         <SidebarProvider>
             <AppSidebar user={user} />
-            <div className='m-2'>
-                <SidebarTrigger />
-                {children}
+            <div className="flex-grow">
+                <SiteHeader />
+                <div className="container mx-auto px-4">
+                    {children}
+                </div>
             </div>
         </SidebarProvider >
     )

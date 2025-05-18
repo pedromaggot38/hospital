@@ -3,7 +3,7 @@
 import { compare, hash } from 'bcryptjs';
 
 import { signIn } from '@/lib/auth';
-import { AuthCredentials } from '@/types/auth';
+import { AuthCredentials } from '@/lib/types/auth';
 import db from '../db';
 
 export const signInWithCredentials = async (

@@ -23,7 +23,7 @@ import {
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
-import { User } from "@/types/user"
+import { User } from "@/lib/types/all"
 
 const data = {
     user: {
@@ -100,6 +100,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     id: user.id,
                     name: user.name,
                     username: user.username,
+                    active: user.active,
                     email: user.email,
                     image: user.image,
                     role: user.role,

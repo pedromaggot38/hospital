@@ -29,7 +29,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
-import { User } from "@/types/user"
+import { User } from "@/lib/types/all"
 import { Badge } from "../ui/badge"
 
 function RoleBadge({ role }: { role: string }) {
