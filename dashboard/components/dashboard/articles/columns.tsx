@@ -44,10 +44,10 @@ export const columns: ColumnDef<Articles>[] = [
                             <AvatarDashboard user={user} />
                             <div className="flex-1 space-y-1">
                                 <div className="flex items-center justify-between">
-                                    <p className="text-lg font-semibold leading-none">{user.name}</p>
+                                    <p className="text-lg leading-none">{user.name}</p>
                                     <span
                                         className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold text-white
-              ${user.role === "root"
+                                          ${user.role === "root"
                                                 ? "bg-red-600"
                                                 : user.role === "admin"
                                                     ? "bg-yellow-600"

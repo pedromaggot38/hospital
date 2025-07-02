@@ -3,11 +3,11 @@
 import * as React from "react"
 import {
     Command,
-    HeartPulse,
-    HelpCircle,
     Home,
+    HeartPulse,
     Newspaper,
     Settings,
+    HelpCircle,
     Users,
 } from "lucide-react"
 
@@ -23,55 +23,27 @@ import {
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
-import { User } from "@/lib/types/all"
+import { useSession } from "next-auth/react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
     navMain: [
-        {
-            title: "Dashboard",
-            url: "/dashboard",
-            icon: Home,
-        },
-        {
-            title: "Usuários",
-            url: "/dashboard/users",
-            icon: Users,
-        },
-        {
-            title: "Notícias",
-            url: "/dashboard/articles",
-            icon: Newspaper,
-        },
-        {
-            title: "Médicos",
-            url: "/dashboard/doctors",
-            icon: HeartPulse,
-        },
+        { title: "Dashboard", url: "/dashboard", icon: Home },
+        { title: "Usuários", url: "/dashboard/users", icon: Users },
+        { title: "Notícias", url: "/dashboard/articles", icon: Newspaper },
+        { title: "Médicos", url: "/dashboard/doctors", icon: HeartPulse },
     ],
     navSecondary: [
-        {
-            title: "Ajuda",
-            url: "#",
-            icon: HelpCircle,
-        },
-        {
-            title: "Configurações",
-            url: "#",
-            icon: Settings,
-        },
+        { title: "Ajuda", url: "#", icon: HelpCircle },
+        { title: "Configurações", url: "#", icon: Settings },
     ],
 }
 
-type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-    user: User
-}
+type AppSidebarProps = React.ComponentProps<typeof Sidebar>
 
-export function AppSidebar({ user, ...props }: AppSidebarProps) {
+export function AppSidebar(props: AppSidebarProps) {
+    const { data: session, status } = useSession()
+
     return (
         <Sidebar variant="sidebar" collapsible="icon" {...props}>
             <SidebarHeader>
@@ -91,20 +63,24 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
+
             <SidebarContent>
                 <NavMain items={data.navMain} />
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
+
             <SidebarFooter>
-                <NavUser user={{
-                    id: user.id,
-                    name: user.name,
-                    username: user.username,
-                    active: user.active,
-                    email: user.email,
-                    image: user.image,
-                    role: user.role,
-                }} />
+                {status === "loading" ? (
+                    <div className="flex w-full items-center space-x-2 p-2">
+                        <Skeleton className="h-10 w-10 rounded-full" />
+                        <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-4 w-16" />
+                        </div>
+                    </div>
+                ) : status === "authenticated" ? (
+                    <NavUser />
+                ) : null}
             </SidebarFooter>
         </Sidebar>
     )

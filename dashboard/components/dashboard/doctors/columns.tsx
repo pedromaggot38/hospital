@@ -141,7 +141,7 @@ export const columns: ColumnDef<Doctors>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Visibilidade
+                    Visível
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             </div>

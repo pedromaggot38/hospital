@@ -30,7 +30,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
 
     return (
         <SidebarProvider>
-            <AppSidebar user={user} />
+            <AppSidebar />
             <div className="flex-grow">
                 <SiteHeader />
                 <div className="container mx-auto px-4">

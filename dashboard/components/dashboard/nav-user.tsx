@@ -10,11 +10,6 @@ import {
 } from "lucide-react"
 
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
-import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
@@ -27,47 +22,23 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    useSidebar,
 } from "@/components/ui/sidebar"
-import { User } from "@/lib/types/all"
 import { Badge } from "../ui/badge"
+import { logout } from "@/lib/actions/logout"
+import { toast } from "sonner"
 
-function RoleBadge({ role }: { role: string }) {
-    let baseClasses = "uppercase text-xs font-semibold px-2 py-0.5 rounded-lg whitespace-nowrap"
-    switch (role.toLowerCase()) {
-        case "root":
-            return (
-                <Badge className={`${baseClasses} border-2 border-red-700 bg-red-600 text-white`}>
-                    {role}
-                </Badge>
-            )
-        case "admin":
-            return (
-                <Badge className={`${baseClasses} border-2 border-yellow-600 bg-yellow-400 text-white`}>
-                    {role}
-                </Badge>
-            )
-        case "journalist":
-            return (
-                <Badge className={`${baseClasses} border-2 border-blue-700 bg-blue-500 text-white`}>
-                    {role}
-                </Badge>
-            )
-        default:
-            return (
-                <Badge className={`${baseClasses} border border-gray-300 bg-gray-100 text-gray-800`}>
-                    {role}
-                </Badge>
-            )
+import { useCurrentUser } from "@/hooks/use-current-user"
+import AvatarDashboard from "./avatar-dashboard"
+
+export function NavUser() {
+    const user = useCurrentUser()
+
+    const isMobile = false
+
+    function handleLogout() {
+        toast.success("Você saiu com sucesso!")
+        logout()
     }
-}
-
-export function NavUser({
-    user,
-}: {
-    user: User
-}) {
-    const { isMobile } = useSidebar()
 
     return (
         <SidebarMenu>
@@ -78,15 +49,28 @@ export function NavUser({
                             size="lg"
                             className="flex items-center gap-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
-                            <Avatar className="h-8 w-8 rounded-lg">
-                                <AvatarImage src={user.image} alt={user.name} />
-                                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                            </Avatar>
+                            <AvatarDashboard user={user} />
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-semibold">{user.name}</span>
-                                <span className="truncate text-xs">{user.email}</span>
+                                <span className="truncate font-semibold">
+                                    {user?.name ?? "Usuário"}
+                                </span>
+                                <span className="truncate text-xs">
+                                    {user?.email ?? "sem email"}
+                                </span>
                             </div>
-                            <RoleBadge role={user.role} />
+                            {user?.role && (
+                                <Badge
+                                    variant={
+                                        user.role === "root"
+                                            ? "destructive"
+                                            : user.role === "admin"
+                                                ? "default"
+                                                : "secondary"
+                                    }
+                                >
+                                    {user.role}
+                                </Badge>
+                            )}
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
@@ -98,41 +82,42 @@ export function NavUser({
                     >
                         <DropdownMenuLabel className="p-0 font-normal">
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarImage src={user.image} alt={user.name} />
-                                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                                </Avatar>
+                                <AvatarDashboard user={user} />
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">{user.name}</span>
-                                    <span className="truncate text-xs">{user.email}</span>
+                                    <span className="truncate font-semibold">
+                                        {user?.name ?? "Usuário"}
+                                    </span>
+                                    <span className="truncate text-xs">
+                                        {user?.email ?? "sem email"}
+                                    </span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
-                                <Sparkles />
+                                <Sparkles className="mr-2 h-4 w-4" />
                                 Upgrade to Pro
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
-                                <BadgeCheck />
+                                <BadgeCheck className="mr-2 h-4 w-4" />
                                 Account
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <CreditCard />
+                                <CreditCard className="mr-2 h-4 w-4" />
                                 Billing
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <Bell />
+                                <Bell className="mr-2 h-4 w-4" />
                                 Notifications
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <LogOut />
+                        <DropdownMenuItem onClick={handleLogout}>
+                            <LogOut className="mr-2 h-4 w-4" />
                             Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>
